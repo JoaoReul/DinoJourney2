@@ -2,19 +2,17 @@ using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
-
 {
-    public float runSpeed = 10f; // velocidade ao correr
+    public float runSpeed = 10f;
     public float speed = 5f;
-    public float rotationSmoothTime = 0.1f;
     public float gravity = -9.81f;
     public float groundCheckDistance = 0.2f;
     public LayerMask groundMask;
 
     public float attackCooldown = 2f;
 
-    public GameObject biteEffectObject; // <- objeto da mordida presente na cena
-    public Transform biteSpawnPoint;    // <- ponto na frente da boca
+    public GameObject biteEffectObject;
+    public Transform biteSpawnPoint;
 
     private CharacterController controller;
     private Animator animator;
@@ -22,11 +20,12 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 velocity;
     private bool isGrounded;
 
-    private float currentAngle;
-    private float rotationVelocity;
-
     private float attackTimer = 0f;
     private bool isAttacking = false;
+
+    // Suavização do movimento
+    private Vector3 smoothMoveDirection = Vector3.zero;
+    public float movementSmoothTime = 0.1f; // quanto menor, mais responsivo; quanto maior, mais suave
 
     void Start()
     {
@@ -34,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
 
         if (biteEffectObject != null)
-            biteEffectObject.SetActive(false); // garantir que comece invisível
+            biteEffectObject.SetActive(false);
     }
 
     void Update()
@@ -42,7 +41,6 @@ public class PlayerMovement : MonoBehaviour
         if (attackTimer > 0)
             attackTimer -= Time.deltaTime;
 
-        // Verifica se está no chão
         Vector3 origin = transform.position + Vector3.up * 0.1f;
         isGrounded = Physics.Raycast(origin, Vector3.down, groundCheckDistance + 0.1f, groundMask);
 
@@ -55,24 +53,26 @@ public class PlayerMovement : MonoBehaviour
         {
             float h = Input.GetAxis("Horizontal");
             float v = Input.GetAxis("Vertical");
-            Vector3 inputDirection = new Vector3(h, 0, v).normalized;
 
-            animator.SetBool("Andando", inputDirection.magnitude >= 0.1f);
+            // Direção alvo baseada no input
+            Vector3 targetDirection = (transform.forward * v + transform.right * h).normalized;
 
-            Vector3 moveDirection = Vector3.zero;
+            // Suaviza o movimento
+            smoothMoveDirection = Vector3.Lerp(smoothMoveDirection, targetDirection, Time.deltaTime / movementSmoothTime);
 
-            if (inputDirection.magnitude >= 0.1f)
+            // Define a animação
+            animator.SetBool("Andando", smoothMoveDirection.magnitude > 0.3f);
+
+            // Roda o personagem suavemente
+            if (smoothMoveDirection.magnitude >= 0.1f)
             {
-                float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg;
-                currentAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref rotationVelocity, rotationSmoothTime);
-                transform.rotation = Quaternion.Euler(0, currentAngle, 0);
-
-                moveDirection = Quaternion.Euler(0, currentAngle, 0) * Vector3.forward;
+                Quaternion toRotation = Quaternion.LookRotation(smoothMoveDirection, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * 3f); // suavidade da rotação
             }
 
             velocity.y += gravity * Time.deltaTime;
             float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : speed;
-            Vector3 finalMove = moveDirection * currentSpeed + velocity;
+            Vector3 finalMove = smoothMoveDirection * currentSpeed + velocity;
             controller.Move(finalMove * Time.deltaTime);
         }
         else
@@ -88,11 +88,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // Chamada por Animation Event no final da animação de ataque
+    // Animation Event
     public void EndAttack()
     {
         isAttacking = false;
-        SpawnBiteEffect(); // <- ativa o sprite temporariamente
+        SpawnBiteEffect();
     }
 
     private void SpawnBiteEffect()
@@ -102,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
             biteEffectObject.transform.position = biteSpawnPoint.position;
             biteEffectObject.transform.rotation = biteSpawnPoint.rotation;
             biteEffectObject.SetActive(true);
-            Invoke("biteEffectObject", 0.3f); // tempo em que o efeito aparece
+            Invoke("biteEffectObjectt", 0.3f);
         }
     }
 

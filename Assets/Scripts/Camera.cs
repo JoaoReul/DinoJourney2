@@ -1,27 +1,26 @@
 using UnityEngine;
 
-public class CameraFollow : MonoBehaviour
+public class ThirdPersonCamera : MonoBehaviour
 {
     public Transform target;                         // Referência ao personagem
-    public Vector3 offset = new Vector3(0, 5, -7);    // Posição da câmera em relação ao personagem
-    public float smoothSpeed = 10f;                  // Suavidade da posição
-    public float rotationSmoothSpeed = 5f;           // Suavidade da rotação
+    public Vector3 offset = new Vector3(0, 4, -6);    // Posição em relação ao personagem
+    public float positionSmoothTime = 0.1f;          // Suavização do movimento
+    public float rotationSmoothTime = 0.1f;          // Suavização da rotação
+
+    private Vector3 currentVelocity;
 
     void LateUpdate()
     {
         if (target == null) return;
 
-        // Posição desejada
-        Vector3 desiredPosition = target.position + offset;
+        // Calcula a posição desejada baseada na rotação do personagem
+        Vector3 desiredPosition = target.position + target.rotation * offset;
 
-        // Movimento suave da posição
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
-        transform.position = smoothedPosition;
+        // Suaviza a posição da câmera
+        transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref currentVelocity, positionSmoothTime);
 
-        // Rotação desejada
-        Quaternion desiredRotation = Quaternion.LookRotation(target.position - transform.position);
-
-        // Rotação suave
-        transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotationSmoothSpeed * Time.deltaTime);
+        // Gira suavemente para olhar para o personagem
+        Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSmoothTime);
     }
 }
