@@ -67,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
             if (smoothMoveDirection.magnitude >= 0.1f)
             {
                 Quaternion toRotation = Quaternion.LookRotation(smoothMoveDirection, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * 3f); // suavidade da rotação
+                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * 2.5f); // suavidade da rotação
             }
 
             velocity.y += gravity * Time.deltaTime;
