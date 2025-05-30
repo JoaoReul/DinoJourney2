@@ -1,8 +1,11 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerWalk : MonoBehaviour
 {
+    public float CurrentHealth = 3f;
+    public float MaxHealth = 3f;
+
     public float runSpeed = 10f;
     public float speed = 5f;
     public float gravity = -9.81f;
@@ -23,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private float attackTimer = 0f;
     private bool isAttacking = false;
 
-    // Suavização do movimento
+    // Suaviza??o do movimento
     private Vector3 smoothMoveDirection = Vector3.zero;
     public float movementSmoothTime = 0.1f; // quanto menor, mais responsivo; quanto maior, mais suave
 
@@ -54,20 +57,20 @@ public class PlayerMovement : MonoBehaviour
             float h = Input.GetAxis("Horizontal");
             float v = Input.GetAxis("Vertical");
 
-            // Direção alvo baseada no input
+            // Dire??o alvo baseada no input
             Vector3 targetDirection = (transform.forward * v + transform.right * h).normalized;
 
             // Suaviza o movimento
             smoothMoveDirection = Vector3.Lerp(smoothMoveDirection, targetDirection, Time.deltaTime / movementSmoothTime);
 
-            // Define a animação
+            // Define a anima??o
             animator.SetBool("Andando", smoothMoveDirection.magnitude > 0.3f);
 
             // Roda o personagem suavemente
             if (smoothMoveDirection.magnitude >= 0.1f)
             {
                 Quaternion toRotation = Quaternion.LookRotation(smoothMoveDirection, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * 2.5f); // suavidade da rotação
+                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * 2.5f); // suavidade da rota??o
             }
 
             velocity.y += gravity * Time.deltaTime;
