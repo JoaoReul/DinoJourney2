@@ -25,6 +25,7 @@ public class PlayerWalk : MonoBehaviour
 
     private float attackTimer = 0f;
     private bool isAttacking = false;
+    private bool isRunning = false;
 
     // Suaviza??o do movimento
     private Vector3 smoothMoveDirection = Vector3.zero;
