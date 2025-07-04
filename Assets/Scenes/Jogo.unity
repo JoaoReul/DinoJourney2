@@ -669,6 +669,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4101764755901493952, guid: 0104f8225db575847a1bcb21dda6734f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1217954146}
+    - targetCorrespondingSourceObject: {fileID: 4101764755901493952, guid: 0104f8225db575847a1bcb21dda6734f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1217954153}
   m_SourcePrefab: {fileID: 100100000, guid: 0104f8225db575847a1bcb21dda6734f, type: 3}
 --- !u!4 &129770525 stripped
 Transform:
@@ -4220,6 +4223,18 @@ MonoBehaviour:
   biteEffectObject: {fileID: 1116833131}
   biteSpawnPoint: {fileID: 202154086}
   movementSmoothTime: 0.1
+--- !u!114 &1217954153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217954138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34385f9600cb1694cbb5a18a7f84d360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1219329721 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8890633570886062670, guid: 805ad1d9b14abfa49b6e82382e942be7, type: 3}

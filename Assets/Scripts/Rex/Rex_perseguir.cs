@@ -8,10 +8,11 @@ public class RexPerseguirController : MonoBehaviour
     public float detectionRange = 15f;
 
     private CharacterController controller;
-
+    private Animator animator;
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -23,6 +24,8 @@ public class RexPerseguirController : MonoBehaviour
             Vector3 direction = (player.position - transform.position).normalized;
             direction.y = 0; // Remove inclinação
 
+            animator.SetBool("Andando", true); // Ativa andar
+
             // Rotaciona suavemente
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
@@ -30,7 +33,12 @@ public class RexPerseguirController : MonoBehaviour
             // Move
             controller.Move(direction * speed * Time.deltaTime);
         }
+        else
+        {
+            animator.SetBool("Andando", false); // Para andar quando estiver longe
+        }
     }
+
 
     void OnDrawGizmosSelected()
     {

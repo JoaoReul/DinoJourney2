@@ -17,6 +17,7 @@ public class PlayerWalk : MonoBehaviour
     public GameObject biteEffectObject;
     public Transform biteSpawnPoint;
 
+
     private CharacterController controller;
     private Animator animator;
 
@@ -26,6 +27,7 @@ public class PlayerWalk : MonoBehaviour
     private float attackTimer = 0f;
     private bool isAttacking = false;
     private bool isRunning = false;
+    private bool isRugindo = false;
 
     // Suaviza??o do movimento
     private Vector3 smoothMoveDirection = Vector3.zero;
@@ -48,6 +50,13 @@ public class PlayerWalk : MonoBehaviour
         Vector3 origin = transform.position + Vector3.up * 0.1f;
         isGrounded = Physics.Raycast(origin, Vector3.down, groundCheckDistance + 0.1f, groundMask);
 
+        if (Input.GetKeyUp(KeyCode.K))
+        {
+            animator.SetTrigger("Rugir");
+            isRugindo = true;
+        }
+
+
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
@@ -57,6 +66,26 @@ public class PlayerWalk : MonoBehaviour
         {
             float h = Input.GetAxis("Horizontal");
             float v = Input.GetAxis("Vertical");
+
+            if (!isAttacking && !isRugindo)
+{
+
+                if (!isAttacking && !isRugindo)
+                {
+                    // Pode andar normalmente
+                }
+                else
+                {
+                    animator.SetBool("Andando", false);
+                }
+
+                // Pode andar normalmente
+            }
+            else
+{
+    animator.SetBool("Andando", false);
+}
+
 
             // Dire??o alvo baseada no input
             Vector3 targetDirection = (transform.forward * v + transform.right * h).normalized;
