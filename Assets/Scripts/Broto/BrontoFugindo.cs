@@ -103,22 +103,34 @@ public class BrontoFugindo : MonoBehaviour
         isAttacking = true;
         animator.SetBool("Correndo", false);
 
-        // Olha para o jogador
+        // Olha para o jogador antes de atacar (com suavização)
         Vector3 direction = player.position - transform.position;
         direction.y = 0f;
+
         if (direction != Vector3.zero)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
+
+            float t = 0f;
+            while (t < 1f)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, t);
+                t += Time.deltaTime * rotationSpeed;
+                yield return null;
+            }
+
+            // Garante rotação final
             transform.rotation = lookRotation;
         }
 
+        // Dispara trigger de ataque
         animator.SetTrigger("Atacar");
 
-        yield return new WaitForSeconds(1.5f); // tempo da animação de ataque
+        yield return new WaitForSeconds(1.5f); // duração do ataque
 
         isAttacking = false;
 
-        // Verifica se o player ainda está por perto e reativa a animação de correr
+        // Se o player ainda estiver perto, voltar a correr
         float distance = Vector3.Distance(transform.position, player.position);
         if (distance < detectionRange)
         {

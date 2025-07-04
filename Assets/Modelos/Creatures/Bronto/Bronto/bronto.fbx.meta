@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: adb51234e8c20514eba04683e648a485
+guid: dabf65bb9f370b54c97f6ef70d0699ca
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -112,14 +112,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 1
-        functionName: EndAttack
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
