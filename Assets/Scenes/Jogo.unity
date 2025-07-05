@@ -1080,7 +1080,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 129770525}
-  offset: {x: 0, y: 2.08, z: -3.29}
+  offset: {x: 0, y: 2.54, z: -4.83}
   positionSmoothTime: 0.1
   rotationSmoothTime: 5
 --- !u!1 &334323224
@@ -4212,6 +4212,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentHealth: 3
   MaxHealth: 3
+  MaxStamina: 10
+  CurrentStamina: 10
   runSpeed: 10
   speed: 5
   gravity: -9.81
@@ -4335,6 +4337,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1219329727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1219329721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8493b7c7400e4744a9a2fad1bec0e226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 129770525}
+  speed: 5
+  detectionRange: 15
 --- !u!1 &1250543886 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9029897446518736931, guid: 0dc217f71b724c9478c2e30059645269, type: 3}
@@ -4376,6 +4393,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1259199916}
   - component: {fileID: 1259199917}
+  - component: {fileID: 1259199918}
   m_Layer: 5
   m_Name: StaminaSlider
   m_TagString: Untagged
@@ -4455,7 +4473,33 @@ MonoBehaviour:
   m_Value: 10
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1259199918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259199915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c876ada3ac0111c40b02a3c295944d0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Slider: {fileID: 1259199917}
+  Player: {fileID: 1217954138}
 --- !u!1 &1270656556
 GameObject:
   m_ObjectHideFlags: 0
@@ -6087,6 +6131,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8890633570886062670, guid: 805ad1d9b14abfa49b6e82382e942be7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1219329726}
+    - targetCorrespondingSourceObject: {fileID: 8890633570886062670, guid: 805ad1d9b14abfa49b6e82382e942be7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1219329727}
   m_SourcePrefab: {fileID: 100100000, guid: 805ad1d9b14abfa49b6e82382e942be7, type: 3}
 --- !u!1001 &1821895415
 PrefabInstance:

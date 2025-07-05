@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class RexPerseguirController : MonoBehaviour
+public class TrikePerseguirController : MonoBehaviour
 {
     public Transform player;
     public float speed = 5f;
@@ -24,7 +24,7 @@ public class RexPerseguirController : MonoBehaviour
     {
         float distance = Vector3.Distance(transform.position, player.position);
 
-        if (distance <= detectionRange)
+        if (distance <= detectionRange && attackingcool <= 0f)
         {
             Vector3 direction = (player.position - transform.position).normalized;
             direction.y = 0; // Remove inclinação
@@ -54,6 +54,17 @@ public class RexPerseguirController : MonoBehaviour
         if (attackingcool > 0f)
         {
             attackingcool -= Time.deltaTime; // Reduz cooldown
+            Vector3 direction = (transform.position - player.position).normalized;
+            direction.y = 0; // Remove inclinação
+
+            animator.SetBool("Andando", true); // Ativa andar
+
+            // Rotaciona suavemente
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+
+            // Move
+            controller.Move(direction * speed * Time.deltaTime);
         }
     }
 

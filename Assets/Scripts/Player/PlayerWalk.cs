@@ -5,8 +5,11 @@ public class PlayerWalk : MonoBehaviour
 {
     public float CurrentHealth = 3f;
     public float MaxHealth = 3f;
+    public float MaxStamina = 10f;
+    public float CurrentStamina = 10f;
 
     public float runSpeed = 10f;
+    private float runningCooldown = 0f;
     public float speed = 5f;
     public float gravity = -9.81f;
     public float groundCheckDistance = 0.2f;
@@ -82,9 +85,9 @@ public class PlayerWalk : MonoBehaviour
                 // Pode andar normalmente
             }
             else
-{
-    animator.SetBool("Andando", false);
-}
+            {
+              animator.SetBool("Andando", false);
+            }
 
 
             // Dire??o alvo baseada no input
@@ -102,11 +105,38 @@ public class PlayerWalk : MonoBehaviour
                 Quaternion toRotation = Quaternion.LookRotation(smoothMoveDirection, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * 2.5f); // suavidade da rota??o
             }
-
+            float currentSpeed = 0f;
             velocity.y += gravity * Time.deltaTime;
-            float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : speed;
-            Vector3 finalMove = smoothMoveDirection * currentSpeed + velocity;
-            controller.Move(finalMove * Time.deltaTime);
+            if (Input.GetKey(KeyCode.LeftShift) && CurrentStamina > 0f && runningCooldown <= 0f)
+            {
+                isRunning = true;
+                CurrentStamina -= Time.deltaTime * 2; // Consome stamina ao correr
+                currentSpeed = runSpeed;
+                if (CurrentStamina <= 0f && runningCooldown <= 0f)
+                {
+                    CurrentStamina = 0f; // Impede que a stamina fique negativa
+                    isRunning = false; // Para de correr se a stamina acabar
+                    runningCooldown = 5f; // Tempo de recarga para correr novamente
+                }
+            }
+            else
+            {
+                currentSpeed = speed;
+                isRunning = false;
+                if (CurrentStamina < MaxStamina)
+                {
+                    CurrentStamina += Time.deltaTime; // Regenera stamina quando n??o est?? correndo
+                }
+                if (runningCooldown > 0f)
+                {
+                    runningCooldown -= Time.deltaTime; // Diminui o tempo de recarga
+
+                }
+            }
+                Vector3 finalMove = smoothMoveDirection * currentSpeed + velocity;
+                controller.Move(finalMove * Time.deltaTime);
+
+            
         }
         else
         {
@@ -145,5 +175,40 @@ public class PlayerWalk : MonoBehaviour
         {
             biteEffectObject.SetActive(false);
         }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        CurrentHealth -= damage;
+        if (CurrentHealth <= 0f)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        animator.SetTrigger("Morrer");
+        // Aqui voc?? pode adicionar l??gica de morte, como desativar o personagem ou reiniciar o jogo
+        Debug.Log("Player morreu!");
+    }
+
+    public void Rugir()
+    {
+        if (isRugindo)
+        {
+            isRugindo = false;
+            animator.SetBool("Rugindo", false);
+        }
+        else
+        {
+            animator.SetBool("Rugindo", true);
+            isRugindo = true;
+        }
+    }
+
+    public void Eat()
+    {
+        CurrentHealth = Mathf.Min(CurrentHealth + 1f, MaxHealth);
     }
 }
