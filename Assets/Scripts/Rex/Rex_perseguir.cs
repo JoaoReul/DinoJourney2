@@ -8,11 +8,13 @@ public class RexPerseguirController : MonoBehaviour
     public float detectionRange = 15f;
 
     float attackingcool = 0f;
+    bool isAttacking = false;
 
     private CharacterController controller;
     private Animator animator;
 
     PlayerWalk hpPlayer;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -24,39 +26,43 @@ public class RexPerseguirController : MonoBehaviour
     {
         float distance = Vector3.Distance(transform.position, player.position);
 
+        // Se estiver em cooldown de ataque
+        if (attackingcool > 0f)
+        {
+            attackingcool -= Time.deltaTime;
+            animator.SetBool("Andando", false);
+            return;
+        }
+
         if (distance <= detectionRange)
         {
             Vector3 direction = (player.position - transform.position).normalized;
-            direction.y = 0; // Remove inclinação
-
-            animator.SetBool("Andando", true); // Ativa andar
+            direction.y = 0;
 
             // Rotaciona suavemente
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 
-            // Move
-            controller.Move(direction * speed * Time.deltaTime);
-        }
-        if(distance <= 2f && attackingcool <= 0f)
-        {
-            animator.SetTrigger("Atacar"); // Ataca quando perto
-            //insira aqui codigo pra ligar overlay do ataque
-            attackingcool = 3f; // Cooldown de ataque
-            hpPlayer.TakeDamage(1); // Dano ao jogador
-
+            // Se perto o suficiente, ataca
+            if (distance <= 2f)
+            {
+                animator.SetBool("Andando", false);
+                animator.SetTrigger("Atacar");
+                attackingcool = 3f; // Tempo de cooldown
+                hpPlayer.TakeDamage(1);
+            }
+            else
+            {
+                // Anda se não estiver perto demais
+                animator.SetBool("Andando", true);
+                controller.Move(direction * speed * Time.deltaTime);
+            }
         }
         else
         {
-            animator.SetBool("Andando", false); // Para andar quando estiver longe
-        }
-
-        if (attackingcool > 0f)
-        {
-            attackingcool -= Time.deltaTime; // Reduz cooldown
+            animator.SetBool("Andando", false);
         }
     }
-
 
     void OnDrawGizmosSelected()
     {
