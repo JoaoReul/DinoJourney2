@@ -135,6 +135,8 @@ public class PlayerWalk : MonoBehaviour
             }
                 Vector3 finalMove = smoothMoveDirection * currentSpeed + velocity;
                 controller.Move(finalMove * Time.deltaTime);
+                
+
 
             
         }
